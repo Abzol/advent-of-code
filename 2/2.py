@@ -1,25 +1,40 @@
 #!/usr/bin/python3
 import sys
 
-def opAdd(code, x, y, d):
-    code[d] = int(code[x]) + int(code[y])
+class IntcodeComputer:
+    def readOp(self):
+        try:
+            self.ops[self.code[self.pc]]() #call function according to ops[]
+        except KeyError:
+            print("No opcode %d found" % self.code[self.pc])
+            sys.exit()
 
-def opMult(code, x, y, d):
-    code[d] = int(code[x]) * int(code[y])
+    def opAdd(self):
+        self.code[self.code[self.pc+3]] = self.code[self.code[self.pc+1]] + self.code[self.code[self.pc+2]]
+        self.pc += 4
 
-def readOp(code, pos):
-    if int(code[pos]) == 1:
-        opAdd(code, int(code[pos+1]), int(code[pos+2]), int(code[pos+3]))
-    elif int(code[pos]) == 2:
-        opMult(code, int(code[pos+1]), int(code[pos+2]), int(code[pos+3]))
-    elif int(code[pos]) == 99:
-        print(code[0])
+    def opMult(self):
+        self.code[self.code[self.pc+3]] = self.code[self.code[self.pc+1]] * self.code[self.code[self.pc+2]]
+        self.pc += 4
+
+    def opExit(self):
+        print(self.code[0])
         sys.exit()
-    else:
-        raise SyntaxError
+
+    def run(self):
+        while (self.pc < len(self.code)):
+            self.readOp()
+
+    def __init__(self, code):
+        self.code = [int(i) for i in code] #translates everything to int
+        self.pc = 0
+        self.ops = {
+                 1 : self.opAdd,
+                 2 : self.opMult,
+                99 : self.opExit
+                }
 
 if __name__ == "__main__":
     with open(sys.argv[-1]) as f:
-        codes = f.read().split(",")
-        for index in range(len(codes)):
-            readOp(codes, index*4)
+        ic = IntcodeComputer(f.read().split(','))
+        ic.run()
