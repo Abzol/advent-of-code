@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-# to anyone reading this; i really didnt like this assignment
-# im sorry its so shitty code. i should have broken it into functions
-# but i was too lazy
+#dont look at the commit history for this file
 
 import sys
 
@@ -40,9 +38,3 @@ if __name__ == "__main__":
         if key in wire2:
             collisions.add(wire1[key]+wire2[key])
     print(min(collisions))
-    #shortest = -1
-    #for i in wire2:
-    #    dist = abs(i[0]) + abs(i[1])
-    #    if (dist < shortest or shortest == -1):
-    #        shortest = dist
-    #print(shortest)
