@@ -21,11 +21,10 @@ def hasUniqueDoubleDigits(x):
     if not hasDoubleDigits(x):
         return False
     digits = [int(d) for d in str(x)]
-    groupedDigits = list(groupby(digits))
-    groupSizes = [len(x) for x in groupedDigits]
-    if 2 in groupSizes:
-        print(x)
-        return True
+    for k, g in groupby(digits):
+        groupSizes = [sum(1 for _ in g)]
+        if 2 in groupSizes:
+            return True
     return False
 
 def isValidPassword(x):
