@@ -15,6 +15,13 @@ class IntcodeComputer:
         except IndexError:
             return self.code[argument]
 
+    def parseArguments(self, modes, paramCount):
+        params = []
+        modes = self.padModes(modes, paramCount)
+        for i in range(1, len(modes) + 1):
+            params.append(int(self.readArgument(modes[-i], self.code[self.pc+i])))
+        return params
+
     def readOp(self):
         opcode = [int(x) for x in str(self.code[self.pc])]
         try:
@@ -30,16 +37,12 @@ class IntcodeComputer:
             sys.exit()
 
     def opAdd(self, modes):
-        modes = self.padModes(modes, 3)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1])) 
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y, _ = self.parseArguments(modes, 3)
         self.code[self.code[self.pc+3]] = x + y
         self.pc += 4
 
     def opMult(self, modes):
-        modes = self.padModes(modes, 3)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y, _ = self.parseArguments(modes, 3)
         self.code[self.code[self.pc+3]] = x * y
         self.pc += 4
 
@@ -52,27 +55,21 @@ class IntcodeComputer:
         self.pc += 2
 
     def opJumpIfTrue(self, modes):
-        modes = self.padModes(modes, 2)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y = self.parseArguments(modes, 2)
         if (x != 0):
             self.pc = y
         else:
             self.pc += 3
 
     def opJumpIfFalse(self, modes):
-        modes = self.padModes(modes, 2)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y = self.parseArguments(modes, 2)
         if (x == 0):
             self.pc = y
         else:
             self.pc += 3
 
     def opLessThan(self, modes):
-        modes = self.padModes(modes, 3)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y, _ = self.parseArguments(modes, 3)
         if (x < y):
             self.code[self.code[self.pc+3]] = 1
         else:
@@ -80,9 +77,7 @@ class IntcodeComputer:
         self.pc += 4
     
     def opEquals(self, modes):
-        modes = self.padModes(modes, 3)
-        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
-        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        x, y, _ = self.parseArguments(modes, 3)
         if (x == y):
             self.code[self.code[self.pc+3]] = 1
         else:
