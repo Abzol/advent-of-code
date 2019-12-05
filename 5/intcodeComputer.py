@@ -51,6 +51,44 @@ class IntcodeComputer:
         print(self.code[self.code[self.pc+1]])
         self.pc += 2
 
+    def opJumpIfTrue(self, modes):
+        modes = self.padModes(modes, 2)
+        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
+        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        if (x != 0):
+            self.pc = y
+        else:
+            self.pc += 3
+
+    def opJumpIfFalse(self, modes):
+        modes = self.padModes(modes, 2)
+        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
+        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        if (x == 0):
+            self.pc = y
+        else:
+            self.pc += 3
+
+    def opLessThan(self, modes):
+        modes = self.padModes(modes, 3)
+        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
+        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        if (x < y):
+            self.code[self.code[self.pc+3]] = 1
+        else:
+            self.code[self.code[self.pc+3]] = 0
+        self.pc += 4
+    
+    def opEquals(self, modes):
+        modes = self.padModes(modes, 3)
+        x = int(self.readArgument(modes[-1], self.code[self.pc+1]))
+        y = int(self.readArgument(modes[-2], self.code[self.pc+2]))
+        if (x == y):
+            self.code[self.code[self.pc+3]] = 1
+        else:
+            self.code[self.code[self.pc+3]] = 0
+        self.pc += 4
+
     def opExit(self, modes):
         sys.exit()
 
@@ -66,6 +104,10 @@ class IntcodeComputer:
                  2 : self.opMult,
                  3 : self.opMov,
                  4 : self.opPrint,
+                 5 : self.opJumpIfTrue,
+                 6 : self.opJumpIfFalse,
+                 7 : self.opLessThan,
+                 8 : self.opEquals,
                 99 : self.opExit
                 }
 
