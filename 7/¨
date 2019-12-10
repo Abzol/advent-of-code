@@ -13,14 +13,14 @@ if __name__ == "__main__":
             amp_c = intcodeComputer.IntcodeComputer(code)
             amp_d = intcodeComputer.IntcodeComputer(code)
             amp_e = intcodeComputer.IntcodeComputer(code)
-            amps = [amp_a, amp_b, amp_c, amp_d, amp_e]
             ret = 0
             last_out = None
-            for i in range(len(amps)):
-                ret = amps[i].run([phases[i], ret])
-            while( all(not amp.halted() for amp in amps)):
-                for amp in amps:
-                    ret = amp.run([ret])
+            while( not (amp_a.halted() and amp_b.halted() and amp_c.halted() and amp_d.halted() and amp_e.halted())):
+                ret = amp_a.run([phases[0], ret])
+                ret = amp_b.run([phases[1], ret])
+                ret = amp_c.run([phases[2], ret])
+                ret = amp_d.run([phases[3], ret])
+                ret = amp_e.run([phases[4], ret])
                 if (ret != None):
                     last_out = ret
             if last_out > max_out:

@@ -30,7 +30,7 @@ class IntcodeComputer:
         except IndexError:
             pass #single-digit opcode will IndexError; this is expected
         try:
-            self.ops[opcode[-1]](opcode[:-1]) #calls opcode[-1], with all previous elements as arguments OR empty list
+            return self.ops[opcode[-1]](opcode[:-1]) #calls opcode[-1], with all previous elements as arguments OR empty list
             # opcode 1 will thus pass as self.opAdd([]), while opcode 1001 will pass as self.opAdd([1,0])
         except KeyError:
             print("No opcode %d found" % self.code[self.pc])
@@ -58,8 +58,9 @@ class IntcodeComputer:
         self.pc += 2
 
     def opPrint(self, modes):
-        print(self.code[self.code[self.pc+1]])
+        toPrint = (self.code[self.code[self.pc+1]])
         self.pc += 2
+        return(toPrint)
 
     def opJumpIfTrue(self, modes):
         x, y = self.parseArguments(modes, 2)
@@ -92,13 +93,22 @@ class IntcodeComputer:
         self.pc += 4
 
     def opExit(self, modes):
-        sys.exit()
+        self.pc = len(self.code)
 
-    def run(self):
+    def run(self, inputs=None):
+        self.inputs = inputs
         while (self.pc < len(self.code)):
-            self.readOp()
+            rvalue = self.readOp()
+            if rvalue != None:
+                return rvalue
 
-    def __init__(self, code, inputs=None):
+    def reset(self):
+        self.pc = 0
+    
+    def halted(self):
+        return self.pc == len(self.code)
+
+    def __init__(self, code):
         self.code = [int(i) for i in code] #translates everything to int
         self.pc = 0
         self.ops = {
@@ -112,7 +122,7 @@ class IntcodeComputer:
                  8 : self.opEquals,
                 99 : self.opExit
                 }
-        self.inputs = inputs
+        self.inputs = None
 
 if __name__ == "__main__":
     print("this is a module; import it")

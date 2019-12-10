@@ -6,7 +6,7 @@ while read p; do
     IFS=', ' read -r -a arr <<< "$p"
     cur=0
     for i in "${arr[@]}"; do
-        cur=$(./7.py "$i" "$cur" input)
+        cur=$(./7-1.py "$i" "$cur" input)
     done
     if [ "$cur" -gt "$max" ]
     then
