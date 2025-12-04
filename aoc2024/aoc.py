@@ -7,9 +7,9 @@ if __name__ == "__main__":
         with open(f'{sys.argv[1]}/input') as f:
             answer = importlib.import_module(sys.argv[1])
             if (sys.argv[2] == "1"):
-                print(answer.ver_one(f))
+                print(answer.part_one(f))
             elif (sys.argv[2] == "2"):
-                print(answer.ver_two(f))
+                print(answer.part_two(f))
             else:
                 print("No such answer")
     else:
